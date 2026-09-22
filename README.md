@@ -15,7 +15,7 @@
 - For scalability, the system could scale horizontally and should handle over 100M orders per month and high read-to-write ratios (100:1 for search vs. ordering).
 - The system should maintain a high level of availability and consistency
 - The order confirmation for the customers should not take more than 500ms
-- The time from receiving the order to the system and allocating the robots should not take more than 10 secs
+- The time from receiving the order to the system and allocating the robots should not take more than 2 secs
 
 ## Data Model 
 I chose PostgreSQL as the primary source of truth because the system contains highly related and transactional data, including:
@@ -39,14 +39,16 @@ I chose a RESTful HTTP architecture  because the domain revolves around well-def
 | `GET /products?keywords={keywords}&page={page}&limit={limit}` | Filters: keywords, price, category, pagination | Paginated products | Producs search |
 | `GET /users/{userId}/profile` | the user_id | profile data (previous orders, name, location, and so on | get a user profile|
 | `GET /orders/{userId}` | the user_id | orders_ids and info | get the order for a specific user |
-| `GET /orders` | Filters: keywords, money, date, pagination | orders_ids and info| get all the orders|
+| `GET /orders` | Filters: keywords, money, date, pagination | orders_ids and thier info & staus| get all the orders|
 | `POST /robots` | robot info | robot ID + status | add a robot to the fleet|
 | `PATCH /robots` | robot info the needed to be updatted | robot ID + status | update the robot to the fleet|
 | `DELETE /robots/{robot_id}` | robot_id | robot ID + status | delete a robot form the fleet|
+| `GET /robots/{robot_id}` | it could be with robot_id or not | if robot ID--> robot info + status, else all robots info and status | get all the robots or a spisifc one by id|
+| `GET /notification/{notification_id}` | NONE | all notifications and thier info | get all the notificatons or a spisifc one by id||
 
 ## High-level architecture
 ![high level architecure](./High_Level_Architecture1.png)
 
 ---
-- [Deep Dives](./deep_dives.md)
+- [Deep Dives](./deep_dive.md)
 
