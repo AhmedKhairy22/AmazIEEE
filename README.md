@@ -45,7 +45,7 @@ I chose a RESTful HTTP architecture  because the domain revolves around well-def
 | `DELETE /robots/{robot_id}` | robot_id | robot ID + status | delete a robot form the fleet|
 
 ## High-level architecture
-![high level architecure](./High_Level_Architecture.png)
+![high level architecure](./High_Level_Architecture1.png)
 
 ---
 - [Deep Dives](./deep_dives.md)
