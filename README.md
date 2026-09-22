@@ -1,12 +1,15 @@
 ## Functional Requirements 
 - Customers can create accounts
-- Customers can browse products and order them, and they should be able to track the status of what they ordered in the real time, with notifications sent upon changes to this status
+- Customers can browse products, add them to their cart, and order them, and they should be able to track the status of what they ordered in the real time, with notifications sent upon changes to this status
 - Upon order being received, the system should validate the existence of the items and the counts in the inventory
-- The system should make sure that the order is never processed twice
+- The system should make sure that the order is collected successfully and it is not collected twice
 - The system will take the order and will generate the number of robots with the assigned items for them
-- The system will receive a status for each robot at a certain time interval to track the status of the orders, and the system should handle the failure of any robot for any given reason
+- The system will send a check to each robot at a certain time interval to check their status, location, and battery level
+- The system could receive from the robots the status of the item allocated to the robot
 - The system will show a complete overview status for any order and any robots at any given time
 - There is a notification alert for some of the important events, like low stock or a failure of any robot or fulfillment of any order, and you could specify the exact event you need to push notifications for
+- The system should handle the failure of any robot at any time in the process
+- The system should track the order as a whole unit and know if it is fully collected or not and track its status
 
 ## Non-Functional Requirements 
 - For scalability, the system could scale horizontally and should handle over 100M orders per month and high read-to-write ratios (100:1 for search vs. ordering).
@@ -16,12 +19,13 @@
 
 ## Data Model 
 I chose PostgreSQL as the primary source of truth because the system contains highly related and transactional data, including:
-- Users ( have the user_id, name, age, location)
+- Users (user_id, name, age, location, payment_info)
 - Products ( product_id, thumbnail_link, desc, price, vendor, category)
-- Orders ( user_id, product_id (just a note here: the product ID could be separated by a comma since the SQL database schema is restricted), date, money)
+- Orders ( order_id, user_id , date, money)
+- Order_items ( order_id, product_id)
 - robots (robot_id, shelf_life, battry capactiy)
-- fulfillments (id, robot_id, item_id, date_started, date_fulfilled, status). A validation will be on the item_id and robot_id to make sure that the same item is not picked twice 
-- items (item_id, product_id)
+- items (item_id, product_id) 
+- allocations (id, robot_id, item_id, order_id, date_started, date_fulfilled, status) A uniqueness validation will be on the item_id and robot_id to make sure that the same item is not picked twice if the status was completed
 - notifications ( id, event, status)
 
 ## API Design 
